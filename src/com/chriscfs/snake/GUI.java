@@ -1,8 +1,11 @@
 package com.chriscfs.snake;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 
 public class GUI extends JPanel implements ActionListener {
     JFrame window;
@@ -128,6 +131,19 @@ public class GUI extends JPanel implements ActionListener {
         ap.put(id, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // play move sound
+                new Thread(() -> {
+                    try {
+                        Clip clip = AudioSystem.getClip();
+                        clip.open(AudioSystem.getAudioInputStream(
+                                new File(getClass().getResource("Music/moveBeep.wav").getPath()))
+                        );
+                        clip.start();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }).start();
+
                 actionListener.actionPerformed(e);
                 comp.repaint();
             }
